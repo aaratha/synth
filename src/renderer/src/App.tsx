@@ -1,7 +1,36 @@
 import Versions from './components/Versions'
 import React, { useState } from 'react';
-import Module from './components/module'
+import OscillatorModule from './components/oscillatormodule'
 import Board from './components/board'
+
+
+const ModuleManager = () => {
+    const [modules, setModules] = useState([]);
+
+    const addModule = () => {
+        // Create a new module with unique key (e.g., using the current timestamp)
+        const newModule = {
+            key: Date.now(), // Unique key for each module
+            position: { x: 50, y: 50 }, // Default position, can randomize or modify as needed
+        };
+        setModules(prevModules => [...prevModules, newModule]);
+    };
+
+    return (
+        <div>
+            <button onClick={addModule} className="bg-blue-500 text-white p-2 rounded">
+                Add Module
+            </button>
+            <div>
+                {modules.map(module => (
+                    <Module key={module.key} initialPosition={module.position} />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default ModuleManager;
 
 
 function App(): JSX.Element {
@@ -26,7 +55,7 @@ function App(): JSX.Element {
   return (
     <div className="flex flex-col w-full h-[calc(100vh)] bg-background text-text1 rounded-[10px] p-4">
       <div className="text-xl ">Modular Synth</div>
-      <Module position={position} setPosition={setPosition} setDragging={setDragging} />
+      <OscillatorModule position={position} setPosition={setPosition} setDragging={setDragging} />
       <Board onDrop={handleDrop} />
     </div>
   )

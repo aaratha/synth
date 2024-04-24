@@ -1,68 +1,58 @@
+
 import React, { useRef, useEffect } from 'react';
 
-const WaveformVisualizer = ({ audioContext, oscillator }) => {
+const WaveformVisualizer = ({ waveType, frequency }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    if (!audioContext || !oscillator) return;
-
+    if (!canvasRef.current) return;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    const analyser = audioContext.createAnalyser();
+    const width = canvas.width;
+    const height = canvas.height;
 
-    // Connect the oscillator to the analyser
-    oscillator.connect(analyser);
-    analyser.fftSize = 2048;
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
+    ctx.clearRect(0, 0, width, height);  // Clear previous drawing
+    ctx.beginPath();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = 'rgb(146, 255, 255)';
 
-    // Setup the canvas dimensions
-    canvas.width = window.innerWidth;
-    canvas.height = 200;
+    let x = 0;
+    const sliceWidth = width * 1.0 / 500;
 
-    const drawWaveform = () => {
-      requestAnimationFrame(drawWaveform);
+    for (let i = 0; i <= 1000; i++) {
+      x = sliceWidth * i;
+      let y = height / 2;
+      const t = i / 1000;
+      const theta = t * frequency * 0.1 * Math.PI * 2; // Scale frequency for drawing
 
-      analyser.getByteTimeDomainData(dataArray);
-
-      ctx.fillStyle = 'rgb(255, 255, 255)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = 'rgb(0, 0, 0)';
-
-      ctx.beginPath();
-
-      const sliceWidth = canvas.width * 1.0 / bufferLength;
-      let x = 0;
-
-      for (let i = 0; i < bufferLength; i++) {
-        const v = dataArray[i] / 128.0;
-        const y = v * canvas.height / 2;
-
-        if (i === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
-        }
-
-        x += sliceWidth;
+      switch (waveType) {
+        case 'sin':
+          y += (height / 4) * Math.sin(theta); // Scale for canvas size
+          break;
+        case 'square':
+          y += (height / 4) * (Math.sign(Math.sin(theta)) * 0.5 + 0.5);
+          break;
+        case 'triangle':
+          y += (height / 4) * (1 - 4 * Math.abs(Math.round(theta / (2 * Math.PI)) - (theta / (2 * Math.PI))));
+          break;
+        case 'sawtooth':
+          y += (height / 4) * (2 * (theta / (2 * Math.PI) - Math.floor(0.5 + theta / (2 * Math.PI))));
+          break;
+        default:
+          break;
       }
 
-      ctx.lineTo(canvas.width, canvas.height / 2);
-      ctx.stroke();
-    };
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    }
 
-    drawWaveform();
+    ctx.stroke();
+  }, [waveType, frequency]);  // Redraw when these props change
 
-    return () => {
-      // Clean up the canvas when the component unmounts
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      analyser.disconnect();
-      oscillator.disconnect(analyser);
-    };
-  }, [audioContext, oscillator]);
-
-  return <canvas ref={canvasRef}></canvas>;
+  return <canvas ref={canvasRef} width="300" height="80"></canvas>;
 };
 
 export default WaveformVisualizer;

@@ -22,7 +22,7 @@ function createWindow(): void {
     mainWindow.show()
   })
 
-  mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools({mode: 'detach'})
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
