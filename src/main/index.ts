@@ -2,9 +2,13 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import * as os from 'os'
 
 function createWindow(): void {
   // Create the browser window.
+  const isMac = os.platform() === 'darwin'
+  const isWindows = os.platform() === 'win32'
+  const isLinux = os.platform() === 'linux'
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -13,16 +17,18 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false,
+      sandbox: false
     },
-    transparent: true
+    transparent: true,
+    ...(isMac ? { vibrancy: 'hud' } : {}),
+    ...(isWindows ? { backgroundMaterial: 'acrylic' } : {})
   })
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
 
-  mainWindow.webContents.openDevTools({mode: 'detach'})
+  mainWindow.webContents.openDevTools({ mode: 'detach' })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
