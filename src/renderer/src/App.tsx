@@ -15,6 +15,11 @@ const ModuleManager = () => {
     setModules((prevModules) => [...prevModules, newModule])
   }
 
+  const removeModule = (key) => {
+    // Remove a module by filtering out the module with the specific key
+    setModules((prevModules) => prevModules.filter((module) => module.key !== key))
+};
+
   return (
     <div>
       <button onClick={addModule} className="bg-blue-500 text-white p-2 rounded">
@@ -22,7 +27,12 @@ const ModuleManager = () => {
       </button>
       <div>
         {modules.map((module) => (
-          <Module key={module.key} initialPosition={module.position} />
+          <OscillatorModule
+            key={module.key}
+            id={module.key}
+            initialPosition={module.position}
+            removeModule={() => removeModule(module.key)}
+          />
         ))}
       </div>
     </div>
@@ -49,7 +59,7 @@ function App(): JSX.Element {
   return (
     <div className="flex flex-col w-full h-[calc(100vh)] bg-background text-text1 rounded-[10px] p-4">
       <div className="text-xl ">Modular Synth</div>
-      <OscillatorModule position={position} setPosition={setPosition} setDragging={setDragging} />
+      <ModuleManager />
       <Board onDrop={handleDrop} />
     </div>
   )

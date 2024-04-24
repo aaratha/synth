@@ -5,8 +5,8 @@ import WaveformVisualizer from './waveformvisualizer'
 
 
 
-const OscillatorModule = ({ initialPosition }) => {
-  const [position, setPosition] = useState({ x: 50, y: 50 }) // Starting position
+const OscillatorModule = ({ initialPosition, id, removeModule }) => {
+  const [position, setPosition] = useState(initialPosition); // Starting position
   const [dragging, setDragging] = useState(false)
   const [lastMousePosition, setLastMousePosition] = useState({ x: 0, y: 0 })
   const [frequency, setFrequency] = useState(440) // Default frequency: A4 note
@@ -28,7 +28,7 @@ const OscillatorModule = ({ initialPosition }) => {
     };
 
     return (
-      <div className="dropdown absolute left-[3.6rem]">
+      <div className="dropdown absolute left-[3.6rem]" >
         {/* Button to toggle dropdown */}
         <button
           className="dropdown-toggle bg-black  bg-opacity-15 border w-[5rem] border-t-0 border-moduleGreen text-text1  rounded-md rounded-t-none"
@@ -39,22 +39,22 @@ const OscillatorModule = ({ initialPosition }) => {
 
         {/* Dropdown content */}
         {isOpen && (
-          <div className="dropdown-menu bg-[#133b28] rounded-md p-1">
+          <div className="dropdown-menu bg-[#133b2e] rounded-md p-1 border border-white border-opacity-20 mt-1">
             <ul>
               <li
-                className="hover:bg-[rgba(248,255,252,0.18)] bg-opacity-15 transition-all rounded-md pl-1 pr-1"
+                className="hover:bg-[rgba(248,255,252,0.12)] bg-opacity-15 transition-all rounded-md pl-1 pr-1"
                 onClick={() => setSelection('sin')}
               >
                 Sine
               </li>
               <li
-                className="hover:bg-[rgba(248,255,252,0.18)] bg-opacity-15 transition-all rounded-md pl-1 pr-1"
+                className="hover:bg-[rgba(248,255,252,0.12)] bg-opacity-15 transition-all rounded-md pl-1 pr-1"
                 onClick={() => setSelection('sawtooth')}
               >
                 Sawtooth
               </li>
               <li
-                className="hover:bg-[rgba(248,255,252,0.18)] bg-opacity-15 transition-all rounded-md pl-1 pr-1"
+                className="hover:bg-[rgba(248,255,252,0.12)] bg-opacity-15 transition-all rounded-md pl-1 pr-1"
                 onClick={() => setSelection('square')}
               >
                 Square
@@ -134,25 +134,6 @@ const OscillatorModule = ({ initialPosition }) => {
     }
   }
 
-  const handleFrequencyChange = (e) => {
-    const newFrequency = parseFloat(e.target.value)
-    setFrequency(newFrequency)
-    if (oscillatorRef.current) {
-      oscillatorRef.current.frequency.setValueAtTime(
-        newFrequency,
-        audioContextRef.current.currentTime
-      )
-    }
-  }
-
-  const handleVolumeChange = (e) => {
-    const newVolume = parseFloat(e.target.value)
-    setVolume(newVolume)
-    if (gainNodeRef.current) {
-      gainNodeRef.current.gain.setValueAtTime(newVolume, audioContextRef.current.currentTime)
-    }
-  }
-
   useEffect(() => {
     if (oscillatorRef.current) {
       oscillatorRef.current.frequency.setValueAtTime(frequency, audioContextRef.current.currentTime);
@@ -180,12 +161,10 @@ const OscillatorModule = ({ initialPosition }) => {
       onMouseDown={handleMouseDown}
       onContextMenu={(e) => e.preventDefault()}
     >
-      <h1 className='font-serif text-text1'>Oscillator Module</h1>
+      <h1 className="font-serif text-text1">Oscillator Module</h1>
 
-      <div className=" flex bg-black bg-opacity-60 rounded-md mb-1 w-full h-full overflow-hidden">
-        {oscillatorRef.current && (
-          <WaveformVisualizer waveType={selection} frequency={frequency} />
-        )}
+      <div className=" flex bg-black inset-shadow bg-opacity-60 rounded-md mb-1 w-full h-full overflow-hidden">
+        {oscillatorRef.current && <WaveformVisualizer waveType={selection} frequency={frequency} />}
       </div>
       <div className=" flex w-full h-full bg-white bg-opacity-10 rounded-md">
         <Knob
@@ -221,7 +200,13 @@ const OscillatorModule = ({ initialPosition }) => {
         <DropdownMenu selection={selection} setSelection={setSelection} />
         <button className=" absolute rounded-full w-[1rem] h-[1rem] bg-black bg-opacity-50 bottom-[10px] left-[10px]"></button>
         <button className=" absolute rounded-full w-[1rem] h-[1rem] bg-black bg-opacity-50 bottom-[10px] right-[10px]"></button>
-      </div>
+        <button
+          onClick={removeModule}
+          className="flex pl-[4px] pt-[1px] rounded-full w-4 h-4 text-black bg-white bg-opacity-25 text-xs font-bold font-mono absolute top-[7px] right-[6px]"
+        >
+          X
+        </button>
+        </div>
     </div>
   )
 }
