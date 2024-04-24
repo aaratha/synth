@@ -31,7 +31,7 @@ const OscillatorModule = ({ initialPosition }) => {
       <div className="dropdown absolute left-[3.6rem]">
         {/* Button to toggle dropdown */}
         <button
-          className="dropdown-toggle border w-[5rem] border-moduleGreen text-text1  rounded-md"
+          className="dropdown-toggle bg-black  bg-opacity-15 border w-[5rem] border-t-0 border-moduleGreen text-text1  rounded-md rounded-t-none"
           onClick={toggleDropdown}
         >
           {selection.replace(/^\w/, (c) => c.toUpperCase())}
@@ -39,11 +39,26 @@ const OscillatorModule = ({ initialPosition }) => {
 
         {/* Dropdown content */}
         {isOpen && (
-          <div className="dropdown-menu bg-black">
+          <div className="dropdown-menu bg-[#133b28] rounded-md p-1">
             <ul>
-              <li onClick={() => setSelection('sin')}>Sine</li>
-              <li onClick={() => setSelection('sawtooth')}>Sawtooth</li>
-              <li onClick={() => setSelection('square')}>Square</li>
+              <li
+                className="hover:bg-[rgba(248,255,252,0.18)] bg-opacity-15 transition-all rounded-md pl-1 pr-1"
+                onClick={() => setSelection('sin')}
+              >
+                Sine
+              </li>
+              <li
+                className="hover:bg-[rgba(248,255,252,0.18)] bg-opacity-15 transition-all rounded-md pl-1 pr-1"
+                onClick={() => setSelection('sawtooth')}
+              >
+                Sawtooth
+              </li>
+              <li
+                className="hover:bg-[rgba(248,255,252,0.18)] bg-opacity-15 transition-all rounded-md pl-1 pr-1"
+                onClick={() => setSelection('square')}
+              >
+                Square
+              </li>
             </ul>
           </div>
         )}
@@ -165,14 +180,14 @@ const OscillatorModule = ({ initialPosition }) => {
       onMouseDown={handleMouseDown}
       onContextMenu={(e) => e.preventDefault()}
     >
-      <h1>Oscillator Module</h1>
+      <h1 className='font-serif text-text1'>Oscillator Module</h1>
 
       <div className=" flex bg-black bg-opacity-60 rounded-md mb-1 w-full h-full overflow-hidden">
         {oscillatorRef.current && (
           <WaveformVisualizer waveType={selection} frequency={frequency} />
         )}
       </div>
-      <div className=" flex w-full h-full bg-white bg-opacity-15 rounded-md">
+      <div className=" flex w-full h-full bg-white bg-opacity-10 rounded-md">
         <Knob
           value={frequency}
           onChange={(value: React.SetStateAction<number>) => {
