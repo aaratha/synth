@@ -7,7 +7,7 @@ const Board = ({ onDrop }) => {
 
   return (
     <div
-      className="w-full h-full bg-board rounded-lg cursor-pointer overflow-hidden"
+      className="w-full h-full bg-board rounded-lg overflow-hidden"
       onDragOver={handleDragOver}
       onDrop={onDrop}
     >

@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Knob } from 'react-rotary-knob';
+import WaveformVisualizer from './waveformvisualizer';
 
 const Module = () => {
   const [position, setPosition] = useState({ x: 50, y: 50 }); // Starting position
@@ -125,7 +126,7 @@ const Module = () => {
             min={20}
             max={2000}
             unlockDistance={0}
-            className="rotate-180 absolute top-[2rem]"
+            className="rotate-180 absolute bottom-[-0.6rem] left-[1.8rem]"
           />
           <Knob
             value={volume}
@@ -139,8 +140,10 @@ const Module = () => {
             max={1}
             step={0.01}
             unlockDistance={0}
-            className="rotate-180 absolute"
+            className="rotate-180 absolute bottom-[-0.6rem] left-[4.0rem]"
           />
+          <button className=' absolute rounded-full w-[1rem] h-[1rem] bg-black bg-opacity-50 bottom-[10px] left-[10px]'></button>
+          <button className=' absolute rounded-full w-[1rem] h-[1rem] bg-black bg-opacity-50 bottom-[10px] right-[10px]'></button>
       </div>
     </div>
   );
