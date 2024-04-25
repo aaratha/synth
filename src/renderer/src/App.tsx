@@ -1,6 +1,7 @@
 import Versions from './components/Versions'
 import React, { useState } from 'react'
 import OscillatorModule from './components/oscillatormodule'
+import OutputModule from './components/outputmodule'
 import Board from './components/board'
 
 const ModuleManager = () => {
@@ -27,7 +28,7 @@ const ModuleManager = () => {
       </button>
       <div>
         {modules.map((module) => (
-          <OscillatorModule
+          <OutputModule
             key={module.key}
             id={module.key}
             initialPosition={module.position}

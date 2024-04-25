@@ -1,12 +1,17 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect, useRef } from 'react'
 import { Knob } from 'react-rotary-knob'
 import WaveformVisualizer from './waveformvisualizer'
 
-
-
-
-const OscillatorModule = ({ initialPosition, id, removeModule }) => {
-  const [position, setPosition] = useState(initialPosition); // Starting position
+const OscillatorModule = ({
+  initialPosition,
+  id,
+  removeModule,
+  addConnection,
+  removeConnection,
+  connectableNodes
+}) => {
+  const [position, setPosition] = useState(initialPosition) // Starting position
   const [dragging, setDragging] = useState(false)
   const [lastMousePosition, setLastMousePosition] = useState({ x: 0, y: 0 })
   const [frequency, setFrequency] = useState(440) // Default frequency: A4 note
@@ -15,20 +20,20 @@ const OscillatorModule = ({ initialPosition, id, removeModule }) => {
   const audioContextRef = useRef(null)
   const oscillatorRef = useRef(null)
   const gainNodeRef = useRef(null)
-  
+
   const [selection, setSelection] = useState('sin')
 
   const DropdownMenu = ({ selection, setSelection }) => {
     // State to manage dropdown visibility
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false)
 
     // Function to toggle dropdown visibility
     const toggleDropdown = () => {
-      setIsOpen(!isOpen);
-    };
+      setIsOpen(!isOpen)
+    }
 
     return (
-      <div className="dropdown absolute left-[3.6rem]" >
+      <div className="dropdown absolute left-[3.6rem]">
         {/* Button to toggle dropdown */}
         <button
           className="dropdown-toggle bg-black  bg-opacity-15 border w-[5rem] border-t-0 border-moduleGreen text-text1  rounded-md rounded-t-none"
@@ -63,8 +68,8 @@ const OscillatorModule = ({ initialPosition, id, removeModule }) => {
           </div>
         )}
       </div>
-    );
-  };
+    )
+  }
 
   useEffect(() => {
     const audioContext = new (window.AudioContext || window.AudioContext)()
@@ -136,15 +141,15 @@ const OscillatorModule = ({ initialPosition, id, removeModule }) => {
 
   useEffect(() => {
     if (oscillatorRef.current) {
-      oscillatorRef.current.frequency.setValueAtTime(frequency, audioContextRef.current.currentTime);
+      oscillatorRef.current.frequency.setValueAtTime(frequency, audioContextRef.current.currentTime)
     }
-  }, [frequency]);
+  }, [frequency])
 
   useEffect(() => {
     if (gainNodeRef.current) {
-      gainNodeRef.current.gain.setValueAtTime(volume, audioContextRef.current.currentTime);
+      gainNodeRef.current.gain.setValueAtTime(volume, audioContextRef.current.currentTime)
     }
-  }, [volume]);
+  }, [volume])
 
   return (
     <div
@@ -198,15 +203,27 @@ const OscillatorModule = ({ initialPosition, id, removeModule }) => {
           className="rotate-180 absolute bottom-[-1.4rem] left-[4.5rem]"
         />
         <DropdownMenu selection={selection} setSelection={setSelection} />
-        <button className=" absolute rounded-full w-[1rem] h-[1rem] bg-black bg-opacity-50 bottom-[10px] left-[10px]"></button>
-        <button className=" absolute rounded-full w-[1rem] h-[1rem] bg-black bg-opacity-50 bottom-[10px] right-[10px]"></button>
+        <button className="absolute rounded-full w-[1rem] h-[1rem] bg-black bg-opacity-50 bottom-[10px] left-[10px]">
+          {connectableNodes.map((node, index) => (
+            <div key={index} className="connection-node" onClick={() => addConnection(id, node.id)}>
+              {/* Node UI Element */}
+            </div>
+          ))}
+        </button>
+        <button className="absolute rounded-full w-[1rem] h-[1rem] bg-black bg-opacity-50 bottom-[10px] right-[10px]">
+          {connectableNodes.map((node, index) => (
+            <div key={index} className="connection-node" onClick={() => addConnection(id, node.id)}>
+              {/* Node UI Element */}
+            </div>
+          ))}
+        </button>
         <button
           onClick={removeModule}
           className="flex pl-[4px] pt-[1px] rounded-full w-4 h-4 text-black bg-white bg-opacity-25 text-xs font-bold font-mono absolute top-[7px] right-[6px]"
         >
           X
         </button>
-        </div>
+      </div>
     </div>
   )
 }
