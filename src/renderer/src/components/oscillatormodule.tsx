@@ -7,9 +7,9 @@ const OscillatorModule = ({
   initialPosition,
   id,
   removeModule,
-  addConnection,
-  removeConnection,
-  connectableNodes
+    /* addConnection, */
+    /* removeConnection, */
+    /* connectableNodes */
 }) => {
   const [position, setPosition] = useState(initialPosition) // Starting position
   const [dragging, setDragging] = useState(false)
@@ -204,18 +204,16 @@ const OscillatorModule = ({
         />
         <DropdownMenu selection={selection} setSelection={setSelection} />
         <button className="absolute rounded-full w-[1rem] h-[1rem] bg-black bg-opacity-50 bottom-[10px] left-[10px]">
-          {connectableNodes.map((node, index) => (
+                  {/* {connectableNodes.map((node, index) => (
             <div key={index} className="connection-node" onClick={() => addConnection(id, node.id)}>
-              {/* Node UI Element */}
             </div>
-          ))}
+          ))} */}
         </button>
         <button className="absolute rounded-full w-[1rem] h-[1rem] bg-black bg-opacity-50 bottom-[10px] right-[10px]">
-          {connectableNodes.map((node, index) => (
+                  {/* {connectableNodes.map((node, index) => (
             <div key={index} className="connection-node" onClick={() => addConnection(id, node.id)}>
-              {/* Node UI Element */}
             </div>
-          ))}
+          ))} */}
         </button>
         <button
           onClick={removeModule}

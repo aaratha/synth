@@ -19,7 +19,7 @@ const ModuleManager = () => {
   const removeModule = (key) => {
     // Remove a module by filtering out the module with the specific key
     setModules((prevModules) => prevModules.filter((module) => module.key !== key))
-};
+  };
 
   return (
     <div>
@@ -28,7 +28,7 @@ const ModuleManager = () => {
       </button>
       <div>
         {modules.map((module) => (
-          <OutputModule
+          <OscillatorModule
             key={module.key}
             id={module.key}
             initialPosition={module.position}
